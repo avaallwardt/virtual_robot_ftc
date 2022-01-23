@@ -7,6 +7,7 @@ import javafx.scene.input.KeyCode;
 
 // if push
 // overloaded strafe left -- takes in a double (how much power to apply in strafe left)
+// get the value fron the joystick
 
 
 
@@ -33,21 +34,61 @@ public class AvaOpMode extends OpMode {
         m3.setPower(-1);
         m4.setPower(1);
     }
+    public void strafeRight(double power) {
+        m1.setPower(-1 * power);
+        m2.setPower(power);
+        m3.setPower(power);
+        m4.setPower(-1 * power);
+    }
+    public void stop(){
+        m1.setPower(0);
+        m2.setPower(0);
+        m3.setPower(0);
+        m4.setPower(0);
+    }
+
+    // intake motor methods
+    public void intake(){
+        m1.setPower(1);
+        m2.setPower(1);
+    }
+    public void intakeOpposite(){
+        m1.setPower(-1);
+        m2.setPower(-1);
+    }
+    public void output(){
+        m1.setPower(-1);
+        m2.setPower(-1);
+    }
+    public void outputOpposite(){
+        m1.setPower(1);
+        m2.setPower(1);
+    }
 
 
-    @Override
+
+        @Override
     public void init() {
         m1 = hardwareMap.dcMotor.get("back_right_motor");
-        m2 = hardwareMap.dcMotor.get("back_left_motor");
-        m3 = hardwareMap.dcMotor.get("front_right_motor");
-        m4 = hardwareMap.dcMotor.get("front_left_motor");
-        m1.setDirection(DcMotor.Direction.REVERSE);
-        m3.setDirection(DcMotor.Direction.REVERSE);
+     //   m2 = hardwareMap.dcMotor.get("back_left_motor");
+     //   m3 = hardwareMap.dcMotor.get("front_right_motor");
+     //   m4 = hardwareMap.dcMotor.get("front_left_motor");
+            //   m1.setDirection(DcMotor.Direction.REVERSE);
+       // m3.setDirection(DcMotor.Direction.REVERSE);
 
     }
 
     @Override
     public void loop() {
+        if(gamepad1.b){
+            intake();
+        }
+        if(gamepad1.a){
+            output();
+        }
+
+
+
         verticalLeftJoystick = -1 * gamepad1.left_stick_y;
         horizontalLeftJoystick = gamepad1.left_stick_x;
         telemetry.addData("y-axis value", verticalLeftJoystick);
@@ -61,23 +102,16 @@ public class AvaOpMode extends OpMode {
 
 
         telemetry.update();
-        if(manualMode == true) {
-            m1.setPower(verticalLeftJoystick);
-            m2.setPower(verticalLeftJoystick);
-        }
 
 
-        if(gamepad1.start) {
-            manualMode = !manualMode;
-        }
+    if(horizontalLeftJoystick > 0){
+        strafeRight(horizontalLeftJoystick);
+    }
 
+    if(horizontalLeftJoystick == 0) {
 
-        if(gamepad1.b){;
-            strafeRight();
-        }
-        if(gamepad1.x){
-            strafeLeft();
-        }
+    }
+
     }
 
     // 2 op mode forms: op mode and linear
